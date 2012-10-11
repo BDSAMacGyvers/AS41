@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SchedulingBenchmarking
 {
@@ -29,6 +30,9 @@ namespace SchedulingBenchmarking
         Queue<Job> ShortQueue;
         Queue<Job> MediumQueue;
         Queue<Job> LongQueue;
+
+        Queue<Job> delayedOnce = new Queue<Job>();
+        Queue<Job> delayedTwice = new Queue<Job>();
 
         HashSet<Job> removedJobs;
         private int JobCounter = 0;
@@ -69,7 +73,7 @@ namespace SchedulingBenchmarking
         /// <todo> Could be a one-liner ?</todo>
         /// <returns> The newest job </returns>
         private Job getNewestJob()
-        {
+        {        
             /// Create a list of the three times
             List<Job> timedJob = new List<Job>();
             if (ShortQueue.Count > 0) 
@@ -80,7 +84,7 @@ namespace SchedulingBenchmarking
                 timedJob.Add(LongQueue.ElementAt(0));
 
             /// Return the most recent of the previously found three values
-            return timedJob.OrderBy(job => job.jobId).ElementAt(0);
+            return timedJob.OrderBy(job => job.jobId).ElementAtOrDefault(0);
         }
 
         /// <summary>
@@ -92,7 +96,7 @@ namespace SchedulingBenchmarking
         {
             removedJobs.Add(job);
         }
-
+       
         /// <summary>
         /// Function to "pop", return and remove the newest element
         /// Do so by finding the newest job between the three queues. 
@@ -100,18 +104,28 @@ namespace SchedulingBenchmarking
         /// 
         /// </summary>
         /// <returns> The popped job or null if there's no job to return</returns>
-        public Job popJob(int coresAvailable)
+        public Job popJob(int cores)
         {
+            Job job = null;
+            if (delayedTwice.Count > 0)
+                return delayedTwice.Dequeue();// Always return the oldest job that has been delayed twice
+            else if (delayedOnce.Count > 0)
+            {
+                job = delayedOnce.Dequeue();
+                if (job.CPUsNeeded > cores)
+                {
+                    delayedTwice.Enqueue(job);
+                    return null;
+                }
+                else
+                    return job;
+            }
 
             Job newestJob = getNewestJob();
-            
-            // Check that cores are avaialable.
-            // If not then find next suitable job. Delay job max twice
 
             // Object that we will return
             Job popped = null;
 
-            
             /*
              * Look at the time! And determine which queue is suitable
              */
@@ -124,13 +138,20 @@ namespace SchedulingBenchmarking
             else if (newestJob.ExpectedRuntime >= (int)JobTimes.vLong)
                 popped = LongQueue.Dequeue();
 
+            /// If found jobs requires more cpus than we have
+            if (popped.CPUsNeeded > cores)
+            {
+                delayedOnce.Enqueue(popped);
+                return null;
+            }
             // Check if the popped job is actually a removed one. 
             // If so we should remove the mark and recursively return the next job in line
             if (removedJobs.Contains(popped))
             {
-                removedJobs.Remove(newestJob);
-                return popJob(coresAvailable);
+                removedJobs.Remove(job);
+                return popJob(cores);
             }
+
             return popped;
         }
 

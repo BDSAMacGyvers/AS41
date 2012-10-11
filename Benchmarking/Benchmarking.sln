@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulingBenchmarking", "SchedulingBenchmarking\SchedulingBenchmarking.csproj", "{8E6C1073-9464-4B0A-AFE2-58885D96EE1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulingBenchmarkingTest", "..\..\..\AS40\AS40\SchedulingBenchmarkingTest\SchedulingBenchmarkingTest.csproj", "{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{8E6C1073-9464-4B0A-AFE2-58885D96EE1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E6C1073-9464-4B0A-AFE2-58885D96EE1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E6C1073-9464-4B0A-AFE2-58885D96EE1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

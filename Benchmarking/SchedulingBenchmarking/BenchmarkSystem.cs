@@ -37,7 +37,7 @@ namespace SchedulingBenchmarking
 
             // get the logger to subscribe to BenchmarkSystem
             system.StateChanged += Logger.OnStateChanged;
-            
+            /*
             Job job1 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner1"), 2, 45);
             Job job2 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner2"), 2, 3);
             Job job3 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner3"), 2, 200);
@@ -62,6 +62,11 @@ namespace SchedulingBenchmarking
             system.Submit(job10);
             system.Submit(job11);
             system.Submit(job12);
+            */
+            
+            Simulator sim = new Simulator(system.scheduler);
+
+            Task.Factory.StartNew(()=>sim.run());
 
             system.ExecuteAll();
             
@@ -118,15 +123,15 @@ namespace SchedulingBenchmarking
 
         public void ExecuteAll()
         {
+            while(true)
+                if(!scheduler.Empty()) {            
+                    // get job from scheduler
+                    Job job = scheduler.popJob(cores);
 
-            while (!scheduler.Empty()) {            
-                // get job from scheduler
-                Job job = scheduler.popJob(cores);
+                    Console.WriteLine("Popped " + job);
 
-                Console.WriteLine("Popped " + job);
-
-                Task<string> task = Task.Factory.StartNew<string>(()=>ExecuteJob(job));
-            }    
+                    Task<string> task = Task.Factory.StartNew<string>(()=>ExecuteJob(job));
+                }    
         }
 
         public void changeState(Job job, State state)

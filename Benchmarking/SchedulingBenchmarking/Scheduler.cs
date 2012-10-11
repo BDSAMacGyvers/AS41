@@ -17,6 +17,12 @@ namespace SchedulingBenchmarking
     /// <summary>
     /// Internal class that handles scheduling of tasks. 
     /// </summary>
+    /// <todo>
+    /// Jobs can only be run is the required amount of CPUs is available
+    /// Allow for job delayed when waiting for ressources. Described here:
+    /// Jobs should, in general, be run according to their submission time. However, if the next job requires more CPUs that are available, you should delay the current job and select the next one that can actually be run. 
+    /// A job can be delayed at most 2 times.
+    /// </todo>
     public class Scheduler
     {
         Queue<Job> ShortQueue;

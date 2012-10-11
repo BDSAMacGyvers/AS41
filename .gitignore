@@ -6,3 +6,6 @@ obj
 TestResults
 
 app.config
+
+*.suo
+*.v11.suo

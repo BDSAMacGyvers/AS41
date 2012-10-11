@@ -38,7 +38,7 @@ namespace SchedulingBenchmarking
             {
                 if (value >= 1 && value <= 10)
                     cpusneeded = value;
-                else throw new ArgumentOutOfRangeException() {};
+                else throw new ArgumentOutOfRangeException("CPUsNeeded", "The number of CPUs needed should be between 1 and 10. \nYou specified: " + value);
             }
         }
 

@@ -34,9 +34,10 @@ namespace SchedulingBenchmarking
                 return cpusneeded; 
             }
             set 
-            { 
-                if (value >= 1 && value <= 10) 
-                    cpusneeded = value; 
+            {
+                if (value >= 1 && value <= 10)
+                    cpusneeded = value;
+                else throw new ArgumentOutOfRangeException() {};
             }
         }
 

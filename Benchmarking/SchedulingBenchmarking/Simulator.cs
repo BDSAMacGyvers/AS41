@@ -23,8 +23,13 @@ namespace SchedulingBenchmarking
         /// <param name="cpus"></param>
         /// <param name="runtime"></param>
         /// <returns></returns>
-        private Job createJob(Owner owner, int cpus, int runtime)
+        private Job createJob(Owner owner)
         {
+            Random random = new Random();
+            
+            int cpus = random.Next(1, 10);
+            int runtime = random.Next(500, 5000);
+
             Job job = new Job(
                 (string[] arg) => { 
                     foreach (string s in arg) { 
@@ -54,6 +59,22 @@ namespace SchedulingBenchmarking
             return owners;
         }
 
-
+        /// <summary>
+        /// Create a suitable amount of users
+        /// Create a suitable amount of jobs randomly spread out on users
+        /// </summary>
+        public void run()
+        {
+            Owner[] owners = getRandomOwners(10, 100);
+            
+            Random random; 
+            
+            while (true)
+            {
+                random = new Random();
+                scheduler.addJob(createJob(owners[random.Next(0, owners.Length)]));
+                Thread.Sleep(100);
+            }
+        }
     }
 }

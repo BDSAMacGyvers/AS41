@@ -6,6 +6,15 @@ using System.Text;
 namespace SchedulingBenchmarking
 {
     /// <summary>
+    /// An enum describing the the max running times of jobs in each category (queue)
+    /// </summary>
+    public enum JobTimes
+    {
+        quick = 500, 
+        medium = 2000, 
+        vLong = 5000
+    }
+    /// <summary>
     /// Internal class that handles scheduling of tasks. 
     /// </summary>
     public class Scheduler
@@ -36,13 +45,13 @@ namespace SchedulingBenchmarking
             if (JobCounter > int.MaxValue - 2) JobCounter = 0;
             int time = job.ExpectedRuntime;
 
-            if (time < 30)
+            if (time < (int)JobTimes.quick)
                 ShortQueue.Enqueue(job);
 
-            if (time >= 30 && time < 120)
+            if (time >= (int)JobTimes.quick && time < (int)JobTimes.vLong)
                 MediumQueue.Enqueue(job);
 
-            if (time >= 120)
+            if (time >= (int)JobTimes.vLong)
                 LongQueue.Enqueue(job);
         }
 
@@ -96,13 +105,13 @@ namespace SchedulingBenchmarking
             /*
              * Look at the time! And determine which queue is suitable
              */
-            if (newestJob.ExpectedRuntime < 30)
+            if (newestJob.ExpectedRuntime < (int)JobTimes.quick)
                 popped = ShortQueue.Dequeue();
 
-            else if (newestJob.ExpectedRuntime >= 30 && newestJob.ExpectedRuntime < 120)
+            else if (newestJob.ExpectedRuntime >= (int)JobTimes.quick && newestJob.ExpectedRuntime < (int)JobTimes.vLong)
                 popped = MediumQueue.Dequeue();
 
-            else if (newestJob.ExpectedRuntime >= 120)
+            else if (newestJob.ExpectedRuntime >= (int)JobTimes.vLong)
                 popped = LongQueue.Dequeue();
 
             // Check if the popped job is actually a removed one. 

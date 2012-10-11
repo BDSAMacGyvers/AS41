@@ -38,7 +38,7 @@ namespace SchedulingBenchmarking
             {
                 if (value >= 1 && value <= 10)
                     cpusneeded = value;
-                // todo add exception
+                else throw new ArgumentOutOfRangeException() {};
             }
         }
 

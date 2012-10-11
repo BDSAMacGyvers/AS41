@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulingBenchmarking", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulingBenchmarkingTest", "..\..\..\AS40\AS40\SchedulingBenchmarkingTest\SchedulingBenchmarkingTest.csproj", "{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{A19D439D-0A9C-4650-8B1B-B7D74540CBF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1707BF6E-AA07-4571-A1CF-14C9591C2A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19D439D-0A9C-4650-8B1B-B7D74540CBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19D439D-0A9C-4650-8B1B-B7D74540CBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19D439D-0A9C-4650-8B1B-B7D74540CBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19D439D-0A9C-4650-8B1B-B7D74540CBF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

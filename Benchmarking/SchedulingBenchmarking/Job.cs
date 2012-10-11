@@ -35,7 +35,7 @@ namespace SchedulingBenchmarking
             }
             set 
             { 
-                if (value >= 1 && value < 7) 
+                if (value >= 1 && value <= 10) 
                     cpusneeded = value; 
             }
         }

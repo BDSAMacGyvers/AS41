@@ -68,10 +68,7 @@ namespace SchedulingBenchmarking
 
             Task.Factory.StartNew(()=>sim.run());
 
-            system.ExecuteAll();
-            
-            Job job = new Job((string[] arg) => { return arg.Length.ToString(); }, new Owner("tester"), 3, 35);
-            //Console.WriteLine(job);
+            system.ExecuteAll();           
 
             Console.ReadKey();
         }
@@ -98,6 +95,7 @@ namespace SchedulingBenchmarking
         private string ExecuteJob(Job job)
         {
             Console.WriteLine("Executing " + job);
+
             // start job
             changeState(job, State.Running);
 
@@ -116,7 +114,6 @@ namespace SchedulingBenchmarking
             else
             {
                 changeState(job, State.Terminated);
-
                 return "Job " + job.jobId + " Succeeded";
             }
         }

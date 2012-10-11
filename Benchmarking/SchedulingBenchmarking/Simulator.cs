@@ -28,7 +28,7 @@ namespace SchedulingBenchmarking
             Random random = new Random();
             
             int cpus = random.Next(1, 10);
-            int runtime = random.Next(500, 5000);
+            int runtime = random.Next(0, 5000);
 
             Job job = new Job(
                 (string[] arg) => { 

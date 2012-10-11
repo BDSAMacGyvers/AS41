@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchedulingBenchmarking
 {
-    class Simulator: Task
+    class Simulator
     {
         private Scheduler scheduler;
 
@@ -29,8 +29,7 @@ namespace SchedulingBenchmarking
                 (string[] arg) => { 
                     foreach (string s in arg) { 
                         Console.Out.WriteLine(s); 
-                    } Thread.Sleep(runtime); 
-                    return ""; }, 
+                    }; return ""; }, 
                 owner, 
                 cpus, // Cpus needed 
                 runtime); // Runtime (in milliseconds)
@@ -42,10 +41,10 @@ namespace SchedulingBenchmarking
         /// Function to get a random amount of owners in an array
         /// </summary>
         /// <returns></returns>
-        private Owner[] getRandomOwners(){
+        private Owner[] getRandomOwners(int min, int max){
             Random random = new Random();
             
-            int amountOfOwners = random.Next(5, 11); // Make somewhere between 5 and 10
+            int amountOfOwners = random.Next(min, max); // Make somewhere between 5 and 10
             
             Owner[] owners = new Owner[amountOfOwners];
             for (int i = 0; i < amountOfOwners; i++)
@@ -55,16 +54,6 @@ namespace SchedulingBenchmarking
             return owners;
         }
 
-        /// <summary>
-        /// Method to run a simulation till the end of time
-        /// </summary>
-        public void runForEver()
-        {
-            while (true)
-            {
-                    
-            }
-        }
 
     }
 }

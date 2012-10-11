@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SchedulingBenchmarking
 {
@@ -34,9 +35,10 @@ namespace SchedulingBenchmarking
                 return cpusneeded; 
             }
             set 
-            { 
-                if (value >= 1 && value <= 10) 
-                    cpusneeded = value; 
+            {
+                if (value >= 1 && value <= 10)
+                    cpusneeded = value;
+                // todo add exception
             }
         }
 
@@ -68,6 +70,7 @@ namespace SchedulingBenchmarking
         /// <returns></returns>
         public string Process(string[] args)
         {
+            Thread.Sleep(ExpectedRuntime);
             return del(args);
         }
 

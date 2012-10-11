@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 
 namespace SchedulingBenchmarking
@@ -13,6 +14,8 @@ namespace SchedulingBenchmarking
     /// </summary>
     public class BenchmarkSystem
     {
+        private int cores = 30;
+
         //The sheduler that holds incoming jobs. 
         #if DEBUG
         public Scheduler scheduler = Scheduler.getInstance();
@@ -65,13 +68,6 @@ namespace SchedulingBenchmarking
             Job job = new Job((string[] arg) => { return arg.Length.ToString(); }, new Owner("tester"), 3, 35);
             //Console.WriteLine(job);
 
-
-            DAO dao = new DAO();
-            //dao.FindUsers();
-            //dao.FindAllJobs("owner3");
-            //dao.FindAllSubmitsWithin("owner3", new DateTime(2012, 1, 10), DateTime.Now);
-            //dao.NrOfJobsWithin(new DateTime(2012, 1, 10), DateTime.Now);
-            //dao.NrOfJobsWithinOne(new DateTime(2012, 1, 10), DateTime.Now, "owner3");
             Console.ReadKey();
         }
 
@@ -94,28 +90,42 @@ namespace SchedulingBenchmarking
             scheduler.removeJob(job);
         }
 
+        private string ExecuteJob(Job job)
+        {
+            Console.WriteLine("Executing " + job);
+            // start job
+            changeState(job, State.Running);
+
+            String result = job.Process(
+                new string[] { "Processing job with id " + job.jobId + " owner: " + job.Owner.Name }
+                );
+            
+            // if failed
+            if (result == null)
+            {
+                changeState(job, State.Failed);
+                return "Job " + job.jobId + " Failed :(";
+            }
+
+            // when finished
+            else
+            {
+                changeState(job, State.Terminated);
+
+                return "Job " + job.jobId + " Succeeded";
+            }
+        }
+
         public void ExecuteAll()
         {
-            while (!scheduler.Empty()) {
-             
+
+            while (!scheduler.Empty()) {            
                 // get job from scheduler
-                Job job = scheduler.popJob();
+                Job job = scheduler.popJob(cores);
 
-                // start job
-                changeState(job, State.Running);
-                String result = job.Process(new string[] { "Processing job started at: " + job.jobId + " owner: " + job.Owner.Name  });
+                Console.WriteLine("Popped " + job);
 
-                // if failed
-                if (result == null)
-                {
-                    changeState(job, State.Failed);
-                }
-
-                // when finished
-                else
-                {
-                    changeState(job, State.Terminated);
-                }
+                Task<string> task = Task.Factory.StartNew<string>(()=>ExecuteJob(job));
             }    
         }
 
@@ -134,10 +144,26 @@ namespace SchedulingBenchmarking
         public void updateStatus(Job job)
         {
             State state = job.State;
-            if (state == State.Submitted) Status.Add(job);
-            else if (state == State.Cancelled) Status.Remove(job);
-            else if (state == State.Failed) Status.Remove(job);
-            else if (state == State.Terminated) Status.Remove(job);
+            if (state == State.Submitted)
+            {
+                cores -= job.CPUsNeeded;
+                Status.Add(job);
+            }
+            else if (state == State.Cancelled)
+            {
+                cores += job.CPUsNeeded;
+                Status.Remove(job);
+            }
+            else if (state == State.Failed)
+            {
+                cores += job.CPUsNeeded;
+                Status.Remove(job);
+            }
+            else if (state == State.Terminated)
+            {
+                cores += job.CPUsNeeded;
+                Status.Remove(job);
+            }
             // if state changes from submitted to running, the object 
             // will change state, but the HashSet won't need updating.
         }     

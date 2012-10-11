@@ -14,6 +14,7 @@ namespace SchedulingBenchmarking
         medium = 2000, 
         vLong = 5000
     }
+
     /// <summary>
     /// Internal class that handles scheduling of tasks. 
     /// </summary>
@@ -32,6 +33,7 @@ namespace SchedulingBenchmarking
         HashSet<Job> removedJobs;
         private int JobCounter = 0;
 
+
         //singleton field
         private static Scheduler instance = new Scheduler();
 
@@ -45,8 +47,6 @@ namespace SchedulingBenchmarking
 
         public void addJob(Job job)
         {
-
-
             job.jobId = JobCounter++;
             if (JobCounter > int.MaxValue - 2) JobCounter = 0;
             int time = job.ExpectedRuntime;
@@ -100,14 +100,18 @@ namespace SchedulingBenchmarking
         /// 
         /// </summary>
         /// <returns> The popped job or null if there's no job to return</returns>
-        public Job popJob()
+        public Job popJob(int coresAvailable)
         {
 
             Job newestJob = getNewestJob();
+            
+            // Check that cores are avaialable.
+            // If not then find next suitable job. Delay job max twice
 
             // Object that we will return
             Job popped = null;
 
+            
             /*
              * Look at the time! And determine which queue is suitable
              */
@@ -125,7 +129,7 @@ namespace SchedulingBenchmarking
             if (removedJobs.Contains(popped))
             {
                 removedJobs.Remove(newestJob);
-                return popJob();
+                return popJob(coresAvailable);
             }
             return popped;
         }

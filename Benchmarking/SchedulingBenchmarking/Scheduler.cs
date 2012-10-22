@@ -161,12 +161,42 @@ namespace SchedulingBenchmarking
         /// <returns> Boolean if all queues are empty</returns>
         public bool Empty()
         {
-            return ((ShortQueue.Count == 0) && (MediumQueue.Count == 0) && (LongQueue.Count == 0));
+            Job job1 = (ShortQueue.Count > 0) ? ShortQueue.Peek() : null;
+            Job job2 = (MediumQueue.Count > 0) ? ShortQueue.Peek() : null;
+            Job job3 = (LongQueue.Count > 0) ? LongQueue.Peek() : null;
+
+            if (job1 == null && job2 == null && job3 == null) return true;
+            else
+            {
+                if (removedJobs.Contains(job1))
+                {
+                    removedJobs.Remove(job1);
+                    ShortQueue.Dequeue();
+                    return Empty();
+                }
+                else if (removedJobs.Contains(job2))
+                {
+                    removedJobs.Remove(job2);
+                    MediumQueue.Dequeue();
+                    return Empty();
+                }
+                else if (removedJobs.Contains(job3))
+                {
+                    removedJobs.Remove(job3);
+                    MediumQueue.Dequeue();
+                    return Empty();
+                }
+                return false;
+            }
         }
 
-        public static Scheduler getInstance() 
+        public static Scheduler getInstance()
         {
+#if DEBUG
+            return new Scheduler();
+#else
             return instance;
+#endif
         }
     }
 }

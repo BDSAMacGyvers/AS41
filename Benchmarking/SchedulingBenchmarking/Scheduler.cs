@@ -31,8 +31,8 @@ namespace SchedulingBenchmarking
         Queue<Job> MediumQueue;
         Queue<Job> LongQueue;
 
-        Queue<Job> delayedOnce = new Queue<Job>();
-        Queue<Job> delayedTwice = new Queue<Job>();
+        Queue<Job> delayedOnceQueue = new Queue<Job>();
+        Queue<Job> delayedTwiceQueue = new Queue<Job>();
 
         HashSet<Job> removedJobs;
         private int JobCounter = 0;
@@ -107,14 +107,14 @@ namespace SchedulingBenchmarking
         public Job popJob(int cores)
         {
             Job job = null;
-            if (delayedTwice.Count > 0)
-                return delayedTwice.Dequeue();// Always return the oldest job that has been delayed twice
-            else if (delayedOnce.Count > 0)
+            if (delayedTwiceQueue.Count > 0)
+                return delayedTwiceQueue.Dequeue();// Always return the oldest job that has been delayed twice
+            else if (delayedOnceQueue.Count > 0)
             {
-                job = delayedOnce.Dequeue();
+                job = delayedOnceQueue.Dequeue();
                 if (job.CPUsNeeded > cores)
                 {
-                    delayedTwice.Enqueue(job);
+                    delayedTwiceQueue.Enqueue(job);
                     return null;
                 }
                 else
@@ -141,8 +141,8 @@ namespace SchedulingBenchmarking
             /// If found jobs requires more cpus than we have
             if (popped.CPUsNeeded > cores)
             {
-                delayedOnce.Enqueue(popped);
-                return null;
+                delayedOnceQueue.Enqueue(popped);
+                //return null; // nooooooooo, it needs to return the next job
             }
             // Check if the popped job is actually a removed one. 
             // If so we should remove the mark and recursively return the next job in line
@@ -154,6 +154,13 @@ namespace SchedulingBenchmarking
 
             return popped;
         }
+
+#if DEBUG
+        public Job popJob()
+        {
+            return popJob(30);
+        }
+#endif
 
         /// <summary>
         /// Simple method to check whether the three queues are all empty

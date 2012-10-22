@@ -28,7 +28,7 @@ namespace SchedulingBenchmarking
             Random random = new Random();
             
             int cpus = random.Next(1, 10);
-            int runtime = random.Next(0, 700);
+            int runtime = random.Next(0, 5000);
 
             Job job = new Job(
                 (string[] arg) => { 
@@ -73,7 +73,7 @@ namespace SchedulingBenchmarking
             {
                 random = new Random();
                 scheduler.addJob(createJob(owners[random.Next(0, owners.Length)]));
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
     }

@@ -94,6 +94,10 @@
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
+<<<<<<< HEAD
   </Target>
   -->
 </Project>
+=======
+  </Target>
+>>>>>>> bbf45c77412b3de69a8559f32b384c3875600365

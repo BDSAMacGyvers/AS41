@@ -11,23 +11,22 @@ namespace SchedulingBenchmarking
     /// </summary>
     public class Job
     {
-
         // a delegate for the processing method
         #if DEBUG
         public Func<string[], string> del;
         #else
         private Func<string[], string> del;
         #endif
-
-        
+                
         public int jobId;
-
-        private int cpusneeded;
+        
         public int ExpectedRuntime;
+
         public State State;
 
         public Owner Owner;
 
+        private int cpusneeded;
         public int CPUsNeeded
         {
             get 
@@ -74,12 +73,10 @@ namespace SchedulingBenchmarking
             return del(args);
         }
 
-
         // representation to be used with status array
         public override string ToString() 
         { 
             return "Job added: " +jobId+" owner: "+ Owner.Name;
-        }
-    
+        }    
     }    
 }

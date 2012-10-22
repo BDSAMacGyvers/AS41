@@ -1,8 +1,8 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -33,47 +33,45 @@ namespace SchedulingBenchmarking
 
         static void Main(String[] args) 
         {
-
+            
             BenchmarkSystem system = new BenchmarkSystem();
-            lock (system)
-            {
-                // get the logger to subscribe to BenchmarkSystem
-                system.StateChanged += Logger.OnStateChanged;
-                /*
-                Job job1 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner1"), 2, 45);
-                Job job2 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner2"), 2, 3);
-                Job job3 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner3"), 2, 200);
-                Job job4 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner4"), 2, 3);
-                Job job5 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner5"), 2, 45);
-                Job job6 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner6"), 2, 200);
-                Job job7 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner7"), 2, 45);
-                Job job8 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner8"), 2, 45);
-                Job job9 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner9"), 2, 200);
-                Job job10 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner10"), 2, 3);
-                Job job11 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner11"), 2, 45);
-                Job job12 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner12"), 2, 200);
-                system.Submit(job1);
-                system.Submit(job2);
-                system.Submit(job3);
-                system.Submit(job4);
-                system.Submit(job5);
-                system.Submit(job6);
-                system.Submit(job7);
-                system.Submit(job8);
-                system.Submit(job9);
-                system.Submit(job10);
-                system.Submit(job11);
-                system.Submit(job12);
-                */
 
-                Simulator sim = new Simulator(system.scheduler);
+            // get the logger to subscribe to BenchmarkSystem
+            system.StateChanged += Logger.OnStateChanged;
+            /*
+            Job job1 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner1"), 2, 45);
+            Job job2 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner2"), 2, 3);
+            Job job3 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner3"), 2, 200);
+            Job job4 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner4"), 2, 3);
+            Job job5 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner5"), 2, 45);
+            Job job6 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner6"), 2, 200);
+            Job job7 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner7"), 2, 45);
+            Job job8 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner8"), 2, 45);
+            Job job9 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner9"), 2, 200);
+            Job job10 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner10"), 2, 3);
+            Job job11 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner11"), 2, 45);
+            Job job12 = new Job((string[] arg) => { foreach (string s in arg) { Console.Out.WriteLine(s); } return ""; }, new Owner("owner12"), 2, 200);
+            system.Submit(job1);
+            system.Submit(job2);
+            system.Submit(job3);
+            system.Submit(job4);
+            system.Submit(job5);
+            system.Submit(job6);
+            system.Submit(job7);
+            system.Submit(job8);
+            system.Submit(job9);
+            system.Submit(job10);
+            system.Submit(job11);
+            system.Submit(job12);
+            */
+            
+            Simulator sim = new Simulator(system.scheduler);
 
-                Task.Factory.StartNew(() => sim.run());
+            Task.Factory.StartNew(()=>sim.run());
 
-                system.ExecuteAll();
+            system.ExecuteAll();           
 
-            }
-                Console.ReadKey();
+            Console.ReadKey();
         }
 
         public BenchmarkSystem()
@@ -98,12 +96,12 @@ namespace SchedulingBenchmarking
         private string ExecuteJob(Job job)
         {
             Console.WriteLine("Executing " + job);
+
             // start job
             changeState(job, State.Running);
-            cores = cores - job.CPUsNeeded;
 
             String result = job.Process(
-                new string[] { "Processing job with cores: " + job.CPUsNeeded }
+                new string[] { "Processing job with id " + job.jobId + " owner: " + job.Owner.Name }
                 );
             
             // if failed
@@ -117,7 +115,6 @@ namespace SchedulingBenchmarking
             else
             {
                 changeState(job, State.Terminated);
-
                 return "Job " + job.jobId + " Succeeded";
             }
         }
@@ -129,18 +126,9 @@ namespace SchedulingBenchmarking
                     // get job from scheduler
                     Job job = scheduler.popJob(cores);
 
-                    if (job == null)
-                    {
-                        Console.WriteLine("Popped nothing. Waiting. Cores: " + cores);
-                        continue;
-                    }
-                    else
-                    {
+                    Console.WriteLine("Popped " + job);
 
-                        Console.WriteLine("cores available: " + cores + " job requires: " + job.CPUsNeeded);
-
-                        Task<string> task = Task.Factory.StartNew<string>(() => ExecuteJob(job));
-                    }
+                    Task<string> task = Task.Factory.StartNew<string>(()=>ExecuteJob(job));
                 }    
         }
 
@@ -161,22 +149,22 @@ namespace SchedulingBenchmarking
             State state = job.State;
             if (state == State.Submitted)
             {
-                //cores = cores - job.CPUsNeeded;
+                cores -= job.CPUsNeeded;
                 Status.Add(job);
             }
             else if (state == State.Cancelled)
             {
-                cores = cores+job.CPUsNeeded;
+                cores += job.CPUsNeeded;
                 Status.Remove(job);
             }
             else if (state == State.Failed)
             {
-                cores = cores+job.CPUsNeeded;
+                cores += job.CPUsNeeded;
                 Status.Remove(job);
             }
             else if (state == State.Terminated)
             {
-                cores = cores + job.CPUsNeeded;
+                cores += job.CPUsNeeded;
                 Status.Remove(job);
             }
             // if state changes from submitted to running, the object 

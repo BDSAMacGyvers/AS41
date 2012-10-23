@@ -111,18 +111,18 @@ namespace SchedulingBenchmarking
         /// 
         /// </summary>
         /// <returns> The popped job or null if there's no job to return</returns>
-        public Job popJob(int cores)
+        public Job popJob(int cores, Boolean isDelayed=false)
         {
             Job job = null;
-            if (delayedTwiceQueue.Count > 0)
+            if (!isDelayed && delayedTwiceQueue.Count > 0)
                 return delayedTwiceQueue.Dequeue();// Always return the oldest job that has been delayed twice
-            else if (delayedOnceQueue.Count > 0)
+            else if (!isDelayed && delayedOnceQueue.Count > 0)
             {
                 job = delayedOnceQueue.Dequeue();
                 if (job.CPUsNeeded > cores)
                 {
                     delayedTwiceQueue.Enqueue(job);
-                    return null;
+                    return popJob(cores, true);
                 }
                 else
                     return job;
@@ -149,7 +149,7 @@ namespace SchedulingBenchmarking
             if (popped.CPUsNeeded > cores)
             {
                 delayedOnceQueue.Enqueue(popped);
-                //return null; // nooooooooo, it needs to return the next job
+                return popJob(cores, true);
             }
             // Check if the popped job is actually a removed one. 
             // If so we should remove the mark and recursively return the next job in line
@@ -162,23 +162,24 @@ namespace SchedulingBenchmarking
             return popped;
         }
 
-#if DEBUG
-        public Job popJob()
-        {
-            return popJob(30);
-        }
-#endif
-
         /// <summary>
-        /// Simple method to check whether the three queues are all empty
+        /// Method to check whether the three queues are all empty
         /// </summary>
         /// <returns> Boolean if all queues are empty</returns>
         public bool Empty()
         {
-            Job job1 = (ShortQueue.Count > 0) ? ShortQueue.Peek() : null;
-            Job job2 = (MediumQueue.Count > 0) ? ShortQueue.Peek() : null;
-            Job job3 = (LongQueue.Count > 0) ? LongQueue.Peek() : null;
-
+            Job job1, job2, job3;
+            try
+            {
+                job1 = (ShortQueue.Count > 0) ? ShortQueue.Peek() : null;
+                job2 = (MediumQueue.Count > 0) ? ShortQueue.Peek() : null;
+                job3 = (LongQueue.Count > 0) ? LongQueue.Peek() : null;
+            }
+            catch (InvalidOperationException e)
+            {
+                //Console.WriteLine("something wrong with peek in Empty() in Scheduler");
+                return false;
+            }
             if (job1 == null && job2 == null && job3 == null) return true;
             else
             {
@@ -202,6 +203,9 @@ namespace SchedulingBenchmarking
                 }
                 return false;
             }
+
+
+            return false;
         }
 
         public static Scheduler getInstance()

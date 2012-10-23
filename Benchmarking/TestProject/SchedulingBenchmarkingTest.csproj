@@ -6,7 +6,7 @@
     <ProjectGuid>{A19D439D-0A9C-4650-8B1B-B7D74540CBF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestProject</RootNamespace>
+    <RootNamespace>SchedulingBenchmarking</RootNamespace>
     <AssemblyName>TestProject</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,7 +58,8 @@
     <Compile Include="DAOTest.cs" />
     <Compile Include="JobTest.cs" />
     <Compile Include="SchedulerTest.cs" />
-    <Compile Include="EllenTest.cs" />
+    <Compile Include="CoreTests.cs" />
+    <Compile Include="ThreadTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SchedulingBenchmarking\SchedulingBenchmarking.csproj">
@@ -94,10 +95,6 @@
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-<<<<<<< HEAD
   </Target>
   -->
 </Project>
-=======
-  </Target>
->>>>>>> bbf45c77412b3de69a8559f32b384c3875600365

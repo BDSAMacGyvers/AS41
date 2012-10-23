@@ -7,6 +7,6 @@ namespace SchedulingBenchmarking
 {
     public enum State
     {
-        Submitted, Cancelled, Running, Terminated, Failed
+        Created, Submitted, Cancelled, Running, Terminated, Failed
     }
 }

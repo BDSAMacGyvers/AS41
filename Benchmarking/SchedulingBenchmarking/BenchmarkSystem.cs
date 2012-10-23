@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 
 namespace SchedulingBenchmarking
@@ -125,6 +126,9 @@ namespace SchedulingBenchmarking
                 if(!scheduler.Empty()) {            
                     // get job from scheduler
                     Job job = scheduler.popJob(cores);
+
+                    while (cores < job.CPUsNeeded)
+                        Thread.Sleep(100);
 
                     Console.WriteLine("Popped " + job);
 
